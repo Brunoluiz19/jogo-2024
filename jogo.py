@@ -7,8 +7,8 @@ import time
 pygame.init()
 
 # Configurações da tela
-largura_tela = 1000
-altura_tela = 800
+largura_tela = 1500
+altura_tela = 900
 tela = pygame.display.set_mode((largura_tela, altura_tela))
 
 # Cores
@@ -17,9 +17,8 @@ BRANCO = (255, 255, 255)
 VERMELHO = (255, 0, 0)
 
 # Limites laterais
-LIMITE_ESQUERDO = 100
-LIMITE_DIREITO = largura_tela - 100
-
+LIMITE_ESQUERDO = 50
+LIMITE_DIREITO = largura_tela - 50
 # Variáveis do jogo
 distancia_percorrida = 0
 recorde = 0
@@ -38,10 +37,14 @@ def desenhar_texto(texto, tamanho, cor, x, y):
 class Jogador(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.Surface((50, 50))
-        self.image.fill(BRANCO)
-        self.rect = self.image.get_rect(center=(largura_tela // 2, altura_tela - 100))
-        self.velocidade = 5
+        carro = "imagem jogo\R.png"
+        self.image = pygame.image.load(carro)
+        self.image = pygame.transform.scale(self.image, (100, 140))
+        self.rect = self.image.get_rect()
+        self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
+        # Define a posição do jogador na parte inferior da tela
+        self.rect.y = altura_tela - self.rect.height - 20  # Ajuste a posição conforme necessário
+        self.velocidade = 9
 
     def update(self):
         teclas = pygame.key.get_pressed()
@@ -58,8 +61,9 @@ class Jogador(pygame.sprite.Sprite):
 class Inimigo(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.Surface((50, 30))
-        self.image.fill(VERMELHO)
+        carro1 = 'imagem jogo\R.png'
+        self.image = pygame.image.load(carro1)
+        self.image = pygame.transform.scale(self.image, (100, 140))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         self.rect.y = random.randrange(-150, -100)
@@ -92,9 +96,10 @@ def iniciar_jogo():
     for _ in range(5):
         while True:
             x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - 50)
-            if x not in posicoes_ocupadas:
-                posicoes_ocupadas.add(x)
+            # Verifica se a nova posição está muito próxima de outras posições ocupadas
+            if all(abs(x - pos) > 50 for pos in posicoes_ocupadas):
                 break
+        posicoes_ocupadas.add(x)
         inimigo = Inimigo()
         inimigo.rect.x = x
         todos_sprites.add(inimigo)
@@ -142,10 +147,27 @@ while rodando:
         # Calcula a distância percorrida pelo jogador
         distancia_percorrida += jogador.velocidade
 
-        # Verifica se a distância aumentou 300 para aumentar a velocidade dos inimigos vermelhos
-        if distancia_percorrida % 300 == 0:
+        # Verifica se a distância aumentou para aumentar a velocidade dos inimigos vermelhos
+        if distancia_percorrida % 10 == 0:
             for inimigo in inimigos:
-                inimigo.velocidade += 0.5  # Aumento de velocidade dos inimigos vermelhos
+                inimigo.velocidade += 2  # Aumento de velocidade dos inimigos vermelhos
+
+        # Incrementa a velocidade dos inimigos vermelhos quando o recorde for múltiplo de 1000
+        if distancia_percorrida % 100 == 0:
+            for inimigo in inimigos:
+                inimigo.velocidade += 2  # Aumento de velocidade dos inimigos vermelhos
+
+        # Verifica e ajusta as velocidades para evitar que os inimigos se sobreponham
+        for inimigo1 in inimigos:
+            for inimigo2 in inimigos:
+                if inimigo1 != inimigo2 and inimigo1.rect.colliderect(inimigo2.rect):
+                    # Se houver colisão, ajusta as velocidades para que não se sobreponham
+                    if inimigo1.rect.y < inimigo2.rect.y:
+                        inimigo1.rect.y -= 5
+                        inimigo2.rect.y += 5
+                    else:
+                        inimigo1.rect.y += 5
+                        inimigo2.rect.y -= 5
 
         # Desenha na tela
         tela.fill(PRETO)
@@ -172,7 +194,7 @@ while rodando:
         desenhar_texto("Você morreu! Pressione qualquer tecla para reiniciar ou Esc para sair", 30, BRANCO, largura_tela // 2, altura_tela // 2)
         pygame.display.flip()
 
-    clock.tick(60)
+    clock.tick(120)
 
 # Finaliza o Pygame
 pygame.quit()
