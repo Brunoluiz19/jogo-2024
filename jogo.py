@@ -16,7 +16,7 @@ BRANCO = (255,255,255)
 
 # Carrega as imagens
 imagem_inicio = pygame.image.load('imagem jogo\_ee80465a-bcb5-435d-90fc-9275a5ca9f2a.jpeg').convert_alpha()
-imagem_fundo = pygame.image.load('imagem jogo\Design sem nome.png').convert()
+imagem_fundo = pygame.image.load('imagem jogo\Fundo.png').convert()
 imagem_morte = pygame.image.load('imagem jogo\_4328f170-e6c9-4d9e-b2bd-367e5ab09727.jpeg').convert_alpha()
 
 # Redimensiona as imagens para ajustar à tela
@@ -26,8 +26,8 @@ imagem_morte = pygame.transform.scale(imagem_morte, (largura_tela, altura_tela))
 
 
 # Limites laterais
-LIMITE_ESQUERDO = 50
-LIMITE_DIREITO = largura_tela - 50
+LIMITE_ESQUERDO = 70
+LIMITE_DIREITO = largura_tela - 70
 # Variáveis do jogo
 distancia_percorrida = 0
 recorde = 0
@@ -46,9 +46,9 @@ def desenhar_texto(texto, tamanho, cor, x, y):
 class Jogador(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        carro = "imagem jogo\R.png"
+        carro = "imagem jogo\Carro.png"
         self.image = pygame.image.load(carro)
-        self.image = pygame.transform.scale(self.image, (100, 140))
+        self.image = pygame.transform.scale(self.image, (48, 100))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         # Define a posição do jogador na parte inferior da tela
@@ -70,9 +70,9 @@ class Jogador(pygame.sprite.Sprite):
 class Inimigo(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        carro1 = 'imagem jogo\R.png'
+        carro1 = 'imagem jogo\Carro.png'
         self.image = pygame.image.load(carro1)
-        self.image = pygame.transform.scale(self.image, (100, 140))
+        self.image = pygame.transform.scale(self.image, (48, 100))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         self.rect.y = random.randrange(-150, -100)
@@ -182,10 +182,7 @@ while rodando:
         tela.blit(imagem_fundo, (0, 0))  # Desenha a imagem de fundo
         todos_sprites.draw(tela)
 
-        # Desenha os limites laterais
-        pygame.draw.line(tela, BRANCO, (LIMITE_ESQUERDO, 0), (LIMITE_ESQUERDO, altura_tela), 5)
-        pygame.draw.line(tela, BRANCO, (LIMITE_DIREITO, 0), (LIMITE_DIREITO, altura_tela), 5)
-
+    
         # Desenha a distância percorrida e o recorde na tela
         desenhar_texto(f'Distância Percorrida: {distancia_percorrida}', 20, BRANCO, largura_tela // 2, 20)
         desenhar_texto(f'Recorde: {recorde}', 20, BRANCO, largura_tela // 2, 50)
