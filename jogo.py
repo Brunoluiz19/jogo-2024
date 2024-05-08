@@ -7,14 +7,23 @@ import time
 pygame.init()
 
 # Configurações da tela
-largura_tela = 1500
-altura_tela = 900
+largura_tela = 1000
+altura_tela = 805
 tela = pygame.display.set_mode((largura_tela, altura_tela))
 
 # Cores
-PRETO = (0, 0, 0)
-BRANCO = (255, 255, 255)
-VERMELHO = (255, 0, 0)
+BRANCO = (255,255,255)
+
+# Carrega as imagens
+imagem_inicio = pygame.image.load('imagem jogo\_ee80465a-bcb5-435d-90fc-9275a5ca9f2a.jpeg').convert_alpha()
+imagem_fundo = pygame.image.load('imagem jogo\Design sem nome.png').convert()
+imagem_morte = pygame.image.load('imagem jogo\_4328f170-e6c9-4d9e-b2bd-367e5ab09727.jpeg').convert_alpha()
+
+# Redimensiona as imagens para ajustar à tela
+imagem_inicio = pygame.transform.scale(imagem_inicio, (largura_tela, altura_tela))
+imagem_fundo = pygame.transform.scale(imagem_fundo, (largura_tela, altura_tela))
+imagem_morte = pygame.transform.scale(imagem_morte, (largura_tela, altura_tela))
+
 
 # Limites laterais
 LIMITE_ESQUERDO = 50
@@ -170,7 +179,7 @@ while rodando:
                         inimigo2.rect.y -= 5
 
         # Desenha na tela
-        tela.fill(PRETO)
+        tela.blit(imagem_fundo, (0, 0))  # Desenha a imagem de fundo
         todos_sprites.draw(tela)
 
         # Desenha os limites laterais
@@ -185,12 +194,12 @@ while rodando:
         pygame.display.flip()
 
     elif em_tela_inicial:
-        tela.fill(PRETO)
+        tela.blit(imagem_inicio, (0, 0))  # Desenha a imagem de início
         desenhar_texto("Pressione qualquer tecla para começar", 30, BRANCO, largura_tela // 2, altura_tela // 2)
         pygame.display.flip()
 
     elif em_tela_morte:
-        tela.fill(PRETO)
+        tela.blit(imagem_morte, (0, 0))  # Desenha a imagem de morte
         desenhar_texto("Você morreu! Pressione qualquer tecla para reiniciar ou Esc para sair", 30, BRANCO, largura_tela // 2, altura_tela // 2)
         pygame.display.flip()
 
