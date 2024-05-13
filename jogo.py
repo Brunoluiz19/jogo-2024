@@ -48,7 +48,7 @@ class Jogador(pygame.sprite.Sprite):
         super().__init__()
         carro = "imagem jogo\Carro.png"
         self.image = pygame.image.load(carro)
-        self.image = pygame.transform.scale(self.image, (48, 100))
+        self.image = pygame.transform.scale(self.image, (60, 100))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         # Define a posição do jogador na parte inferior da tela
@@ -72,7 +72,7 @@ class Inimigo(pygame.sprite.Sprite):
         super().__init__()
         carro1 = 'imagem jogo\Carro.png'
         self.image = pygame.image.load(carro1)
-        self.image = pygame.transform.scale(self.image, (48, 100))
+        self.image = pygame.transform.scale(self.image, (60, 100))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         self.rect.y = random.randrange(-150, -100)
