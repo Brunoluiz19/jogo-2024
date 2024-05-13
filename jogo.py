@@ -12,8 +12,8 @@ altura_tela = 805
 tela = pygame.display.set_mode((largura_tela, altura_tela))
 
 # Cores
-BRANCO = (255,255,255)
-
+BRANCO = (0,0,0)
+PRETO = (0,0,0)
 # Carrega as imagens
 imagem_inicio = pygame.image.load('imagem jogo\_ee80465a-bcb5-435d-90fc-9275a5ca9f2a.jpeg').convert_alpha()
 imagem_fundo = pygame.image.load('imagem jogo\Fundo.png').convert()
@@ -36,7 +36,8 @@ ultima_atualizacao = time.time()
 
 # Função para desenhar texto na tela
 def desenhar_texto(texto, tamanho, cor, x, y):
-    fonte = pygame.font.Font(None, tamanho)
+    tamanho = 20
+    fonte = pygame.font.Font("Crang.ttf", tamanho)
     texto_surface = fonte.render(texto, True, cor)
     texto_retangulo = texto_surface.get_rect()
     texto_retangulo.center = (x, y)
