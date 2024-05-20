@@ -67,7 +67,7 @@ class Jogador(pygame.sprite.Sprite):
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         # Define a posição do jogador na parte inferior da tela
         self.rect.y = altura_tela - self.rect.height - 20  # Ajuste a posição conforme necessário
-        self.velocidade = 5
+        self.velocidade = 3
 
     def update(self):
         teclas = pygame.key.get_pressed()
@@ -100,7 +100,7 @@ class Inimigo(pygame.sprite.Sprite):
         if self.rect.top > altura_tela:
             self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
             self.rect.y = random.randrange(-150, -100)
-            self.velocidade = random.uniform(3, 4)  # Mudança para permitir velocidades decimais
+            self.velocidade = random.uniform(2, 4)  # Mudança para permitir velocidades decimais
 
 # Grupo de sprites
 todos_sprites = pygame.sprite.Group()
@@ -112,13 +112,14 @@ todos_sprites.add(jogador)
 def iniciar_jogo():
     global distancia_percorrida
     global recorde
-    global velocidade_jogo  # Adicione essa linha
+    global velocidade_jogo
+    global fase_atual  # Adicione esta linha
     todos_sprites.empty()
     inimigos.empty()
     todos_sprites.add(jogador)
     distancia_percorrida = 0
-    # Reinicia a velocidade do jogo para o valor inicial
-    velocidade_jogo = 5  # Adicione essa linha
+    velocidade_jogo = 5
+    fase_atual = 0  # Adicione esta linha
     for _ in range(5):
         x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - 50)
         inimigo = Inimigo()
@@ -133,7 +134,7 @@ iniciar_jogo()
 NUM_FASES = 10
 fase_atual = 0
 metas_fases = [50, 100, 150, 200, 250, 500, 800, 1000, 1200, 1500]  # Distância necessária para cada fase
-taxas_aumento_fases = [2, 2.5, 3, 3.5, 5, 6, 7, 8, 9, 10]  # Taxa de aumento de velocidade para cada fase
+taxas_aumento_fases = [1.5, 2, 2.5, 3.5, 5, 6, 7, 8, 9, 10]  # Taxa de aumento de velocidade para cada fase
 
 # Função para determinar a fase atual
 def determinar_fase(distancia_percorrida):
@@ -170,9 +171,9 @@ while rodando:
         # Atualiza a fase
         nova_fase = determinar_fase(distancia_percorrida)
         if nova_fase > fase_atual:
-            fase_atual = nova_fase
-            # Ajusta a velocidade do jogo para a nova fase
-            velocidade_jogo = 5 + taxas_aumento_fases[fase_atual]
+         fase_atual = nova_fase
+         # Ajusta a velocidade do jogo para a nova fase
+         velocidade_jogo = 5 + taxas_aumento_fases[fase_atual]  
 
         # Ajusta a velocidade do jogador para a velocidade do jogo
         jogador.velocidade = velocidade_jogo
