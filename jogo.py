@@ -84,8 +84,11 @@ class Jogador(pygame.sprite.Sprite):
 class Inimigo(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        carro1 = 'imagem jogo\carroinimigo.png'
-        self.image = pygame.image.load(carro1)
+        carro1 = 'imagem jogo\carroinimigo1.png'
+        carro2 = 'imagem jogo\carroinimigo2.png'
+        carro3 ='imagem jogo\carroinimigo3.png'
+        lista_carros = [carro1, carro2, carro3]
+        self.image = pygame.image.load(random.choice(lista_carros))
         self.image = pygame.transform.scale(self.image, (60, 100))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
