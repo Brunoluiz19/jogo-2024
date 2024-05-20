@@ -11,6 +11,13 @@ pygame.mixer.init()
 #música
 soundtrack = pygame.mixer.Sound("background.mp3")
 soundtrack.play(-1)
+explosao = pygame.mixer.Sound("explosao.mp3")
+
+#função para recomecar a musica
+def restart_soundtrack():
+    soundtrack.stop()  # para a musica
+    soundtrack.play(-1)  #recomeca 
+
 
 # Configurações da tela
 largura_tela = 1000
@@ -148,6 +155,12 @@ while rodando:
 
         # Verifica se o jogador colidiu com algum inimigo
         if pygame.sprite.spritecollide(jogador, inimigos, False):
+            soundtrack.stop()
+            explosao.play()
+
+            pygame.time.delay(2000)
+
+            restart_soundtrack()
             em_tela_morte = True
 
             # Atualiza o recorde se a distância percorrida for maior que o recorde atual
