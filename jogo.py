@@ -136,6 +136,9 @@ def determinar_fase(distancia_percorrida):
             return i
     return NUM_FASES - 1
 
+# Variável para controlar a velocidade do jogo
+velocidade_jogo = 5
+
 # Loop do jogo
 rodando = True
 em_tela_inicial = True
@@ -162,9 +165,15 @@ while rodando:
         nova_fase = determinar_fase(distancia_percorrida)
         if nova_fase > fase_atual:
             fase_atual = nova_fase
-            # Ajusta a velocidade dos inimigos para a nova fase
-            for inimigo in inimigos:
-                inimigo.velocidade += taxas_aumento_fases[fase_atual]
+            # Ajusta a velocidade do jogo para a nova fase
+            velocidade_jogo = 5 + taxas_aumento_fases[fase_atual]
+
+        # Ajusta a velocidade do jogador para a velocidade do jogo
+        jogador.velocidade = velocidade_jogo
+
+        # Ajusta a velocidade dos inimigos para a velocidade do jogo
+        for inimigo in inimigos:
+            inimigo.velocidade = random.uniform(velocidade_jogo - 2, velocidade_jogo - 1)
 
         # Verifica se o jogador colidiu com algum inimigo
         if pygame.sprite.spritecollide(jogador, inimigos, False):
