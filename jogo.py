@@ -3,8 +3,14 @@ import random
 import sys
 import time
 import math
+import os
 # Inicializa o Pygame
 pygame.init()
+pygame.mixer.init()
+
+#música
+soundtrack = pygame.mixer.Sound("background.mp3")
+soundtrack.play(-1)
 
 # Configurações da tela
 largura_tela = 1000
