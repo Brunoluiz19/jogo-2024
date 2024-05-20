@@ -84,7 +84,7 @@ class Jogador(pygame.sprite.Sprite):
 class Inimigo(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        carro1 = 'imagem jogo\Carro.png'
+        carro1 = 'imagem jogo\carroinimigo.png'
         self.image = pygame.image.load(carro1)
         self.image = pygame.transform.scale(self.image, (60, 100))
         self.rect = self.image.get_rect()
