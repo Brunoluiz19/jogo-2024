@@ -1,9 +1,24 @@
 import pygame
 import random
 import sys
+import time
+import math
+import os
 
 # Inicializa o Pygame
 pygame.init()
+pygame.mixer.init()
+
+#música
+soundtrack = pygame.mixer.Sound("background.mp3")
+soundtrack.play(-1)
+explosao = pygame.mixer.Sound("explosao.mp3")
+
+#função para recomecar a musica
+def restart_soundtrack():
+    soundtrack.stop()  # para a musica
+    soundtrack.play(-1)  #recomeca 
+
 
 # Configurações da tela
 largura_tela = 1000
@@ -11,8 +26,8 @@ altura_tela = 805
 tela = pygame.display.set_mode((largura_tela, altura_tela))
 
 # Cores
-BRANCO = (255,255,255)
-
+BRANCO = (0,0,0)
+PRETO = (0,0,0)
 # Carrega as imagens
 imagem_inicio = pygame.image.load('imagem jogo\_ee80465a-bcb5-435d-90fc-9275a5ca9f2a.jpeg').convert_alpha()
 imagem_fundo = pygame.image.load('imagem jogo\Fundo.png').convert()
@@ -34,7 +49,8 @@ melhores_recordes = []
 
 # Função para desenhar texto na tela
 def desenhar_texto(texto, tamanho, cor, x, y):
-    fonte = pygame.font.Font(None, tamanho)
+    tamanho = 20
+    fonte = pygame.font.Font("Crang.ttf", tamanho)
     texto_surface = fonte.render(texto, True, cor)
     texto_retangulo = texto_surface.get_rect()
     texto_retangulo.center = (x, y)
@@ -46,7 +62,7 @@ class Jogador(pygame.sprite.Sprite):
         super().__init__()
         carro = "imagem jogo\Carro.png"
         self.image = pygame.image.load(carro)
-        self.image = pygame.transform.scale(self.image, (48, 100))
+        self.image = pygame.transform.scale(self.image, (60, 100))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         # Define a posição do jogador na parte inferior da tela
@@ -70,7 +86,7 @@ class Inimigo(pygame.sprite.Sprite):
         super().__init__()
         carro1 = 'imagem jogo\Carro.png'
         self.image = pygame.image.load(carro1)
-        self.image = pygame.transform.scale(self.image, (48, 100))
+        self.image = pygame.transform.scale(self.image, (60, 100))
         self.rect = self.image.get_rect()
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         self.rect.y = random.randrange(-150, -100)
@@ -110,7 +126,7 @@ iniciar_jogo()
 # Variáveis de fases
 NUM_FASES = 10
 fase_atual = 0
-metas_fases = [500, 1000, 1500, 2000, 2500, 5000, 8000, 10000, 12000, 15000]  # Distância necessária para cada fase
+metas_fases = [50, 100, 150, 200, 250, 500, 800, 1000, 1200, 1500]  # Distância necessária para cada fase
 taxas_aumento_fases = [2, 3, 4, 5, 6, 7, 8, 9, 9.5, 10]  # Taxa de aumento de velocidade para cada fase
 
 # Função para determinar a fase atual
@@ -152,6 +168,12 @@ while rodando:
 
         # Verifica se o jogador colidiu com algum inimigo
         if pygame.sprite.spritecollide(jogador, inimigos, False):
+            soundtrack.stop()
+            explosao.play()
+
+            pygame.time.delay(2000)
+
+            restart_soundtrack()
             em_tela_morte = True
 
             # Atualiza o recorde se a distância percorrida for maior que o recorde atual
@@ -200,7 +222,7 @@ while rodando:
         desenhar_texto("Você Bateu! Pressione qualquer tecla para reiniciar ou Esc para sair", 50, BRANCO, largura_tela // 2, altura_tela // 2)
         pygame.display.flip()
 
-    clock.tick(240)
+    clock.tick(120)
 
 # Finaliza o Pygame
 pygame.quit()
