@@ -1,7 +1,6 @@
 import pygame
 import random
 import sys
-import time
 
 # Inicializa o Pygame
 pygame.init()
@@ -29,10 +28,9 @@ imagem_morte = pygame.transform.scale(imagem_morte, (largura_tela, altura_tela))
 LIMITE_ESQUERDO = 70
 LIMITE_DIREITO = largura_tela - 70
 # Variáveis do jogo
-distancia_percorrida = 0
+distancia_percorrida = 0/100
 recorde = 0
 melhores_recordes = []
-ultima_atualizacao = time.time()
 
 # Função para desenhar texto na tela
 def desenhar_texto(texto, tamanho, cor, x, y):
@@ -53,7 +51,7 @@ class Jogador(pygame.sprite.Sprite):
         self.rect.x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - self.rect.width)
         # Define a posição do jogador na parte inferior da tela
         self.rect.y = altura_tela - self.rect.height - 20  # Ajuste a posição conforme necessário
-        self.velocidade = 9
+        self.velocidade = 5
 
     def update(self):
         teclas = pygame.key.get_pressed()
@@ -95,20 +93,12 @@ todos_sprites.add(jogador)
 def iniciar_jogo():
     global distancia_percorrida
     global recorde
-    global ultima_atualizacao
     todos_sprites.empty()
     inimigos.empty()
     todos_sprites.add(jogador)
     distancia_percorrida = 0
-    ultima_atualizacao = time.time()
-    posicoes_ocupadas = set()
     for _ in range(5):
-        while True:
-            x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - 50)
-            # Verifica se a nova posição está muito próxima de outras posições ocupadas
-            if all(abs(x - pos) > 50 for pos in posicoes_ocupadas):
-                break
-        posicoes_ocupadas.add(x)
+        x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - 50)
         inimigo = Inimigo()
         inimigo.rect.x = x
         todos_sprites.add(inimigo)
@@ -116,6 +106,19 @@ def iniciar_jogo():
 
 # Tela de início
 iniciar_jogo()
+
+# Variáveis de fases
+NUM_FASES = 10
+fase_atual = 0
+metas_fases = [500, 1000, 1500, 2000, 2500, 5000, 8000, 10000, 12000, 15000]  # Distância necessária para cada fase
+taxas_aumento_fases = [2, 3, 4, 5, 6, 7, 8, 9, 9.5, 10]  # Taxa de aumento de velocidade para cada fase
+
+# Função para determinar a fase atual
+def determinar_fase(distancia_percorrida):
+    for i in range(NUM_FASES):
+        if (distancia_percorrida/100) < metas_fases[i]:
+            return i
+    return NUM_FASES - 1
 
 # Loop do jogo
 rodando = True
@@ -139,13 +142,21 @@ while rodando:
         # Atualizações
         todos_sprites.update()
 
+        # Atualiza a fase
+        nova_fase = determinar_fase(distancia_percorrida)
+        if nova_fase > fase_atual:
+            fase_atual = nova_fase
+            # Ajusta a velocidade dos inimigos para a nova fase
+            for inimigo in inimigos:
+                inimigo.velocidade += taxas_aumento_fases[fase_atual]
+
         # Verifica se o jogador colidiu com algum inimigo
         if pygame.sprite.spritecollide(jogador, inimigos, False):
             em_tela_morte = True
 
             # Atualiza o recorde se a distância percorrida for maior que o recorde atual
-            if distancia_percorrida > recorde:
-                recorde = distancia_percorrida
+            if (distancia_percorrida/100) > recorde:
+                recorde = (distancia_percorrida/100)
                 # Adiciona o recorde à lista de melhores recordes se ele não estiver lá
                 if recorde not in melhores_recordes:
                     melhores_recordes.append(recorde)
@@ -155,16 +166,6 @@ while rodando:
 
         # Calcula a distância percorrida pelo jogador
         distancia_percorrida += jogador.velocidade
-
-        # Verifica se a distância aumentou para aumentar a velocidade dos inimigos vermelhos
-        if distancia_percorrida % 10 == 0:
-            for inimigo in inimigos:
-                inimigo.velocidade += 2  # Aumento de velocidade dos inimigos vermelhos
-
-        # Incrementa a velocidade dos inimigos vermelhos quando o recorde for múltiplo de 1000
-        if distancia_percorrida % 100 == 0:
-            for inimigo in inimigos:
-                inimigo.velocidade += 2  # Aumento de velocidade dos inimigos vermelhos
 
         # Verifica e ajusta as velocidades para evitar que os inimigos se sobreponham
         for inimigo1 in inimigos:
@@ -182,9 +183,8 @@ while rodando:
         tela.blit(imagem_fundo, (0, 0))  # Desenha a imagem de fundo
         todos_sprites.draw(tela)
 
-    
         # Desenha a distância percorrida e o recorde na tela
-        desenhar_texto(f'Distância Percorrida: {distancia_percorrida}', 20, BRANCO, largura_tela // 2, 20)
+        desenhar_texto(f'Distância Percorrida: {int(distancia_percorrida/100)}', 20, BRANCO, largura_tela // 2, 20)
         desenhar_texto(f'Recorde: {recorde}', 20, BRANCO, largura_tela // 2, 50)
 
         # Atualiza a tela
@@ -192,15 +192,15 @@ while rodando:
 
     elif em_tela_inicial:
         tela.blit(imagem_inicio, (0, 0))  # Desenha a imagem de início
-        desenhar_texto("Pressione qualquer tecla para começar", 30, BRANCO, largura_tela // 2, altura_tela // 2)
+        desenhar_texto("Pressione qualquer tecla para começar", 50, BRANCO, largura_tela // 2, altura_tela // 2)
         pygame.display.flip()
 
     elif em_tela_morte:
         tela.blit(imagem_morte, (0, 0))  # Desenha a imagem de morte
-        desenhar_texto("Você morreu! Pressione qualquer tecla para reiniciar ou Esc para sair", 30, BRANCO, largura_tela // 2, altura_tela // 2)
+        desenhar_texto("Você Bateu! Pressione qualquer tecla para reiniciar ou Esc para sair", 50, BRANCO, largura_tela // 2, altura_tela // 2)
         pygame.display.flip()
 
-    clock.tick(120)
+    clock.tick(240)
 
 # Finaliza o Pygame
 pygame.quit()
