@@ -112,10 +112,13 @@ todos_sprites.add(jogador)
 def iniciar_jogo():
     global distancia_percorrida
     global recorde
+    global velocidade_jogo  # Adicione essa linha
     todos_sprites.empty()
     inimigos.empty()
     todos_sprites.add(jogador)
     distancia_percorrida = 0
+    # Reinicia a velocidade do jogo para o valor inicial
+    velocidade_jogo = 5  # Adicione essa linha
     for _ in range(5):
         x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - 50)
         inimigo = Inimigo()
@@ -130,7 +133,7 @@ iniciar_jogo()
 NUM_FASES = 10
 fase_atual = 0
 metas_fases = [50, 100, 150, 200, 250, 500, 800, 1000, 1200, 1500]  # Distância necessária para cada fase
-taxas_aumento_fases = [2, 3, 4, 5, 6, 7, 8, 9, 9.5, 10]  # Taxa de aumento de velocidade para cada fase
+taxas_aumento_fases = [2, 2.5, 3, 3.5, 5, 6, 7, 8, 9, 10]  # Taxa de aumento de velocidade para cada fase
 
 # Função para determinar a fase atual
 def determinar_fase(distancia_percorrida):
@@ -219,7 +222,7 @@ while rodando:
 
         # Desenha a distância percorrida e o recorde na tela
         desenhar_texto(f'Distância Percorrida: {int(distancia_percorrida/100)}', 20, BRANCO, largura_tela // 2, 20)
-        desenhar_texto(f'Recorde: {recorde}', 20, BRANCO, largura_tela // 2, 50)
+        desenhar_texto(f'Recorde: {int(recorde/1)}', 20, BRANCO, largura_tela // 2, 50)
 
         # Atualiza a tela
         pygame.display.flip()
