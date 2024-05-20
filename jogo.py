@@ -51,7 +51,7 @@ melhores_recordes = []
 def desenhar_texto(texto, tamanho, cor, x, y):
     tamanho = 20
     fonte = pygame.font.Font("Crang.ttf", tamanho)
-    texto_surface = fonte.render(texto, True, cor)
+    texto_surface = fonte.render(texto, True, cor) 
     texto_retangulo = texto_surface.get_rect()
     texto_retangulo.center = (x, y)
     tela.blit(texto_surface, texto_retangulo)
@@ -60,7 +60,7 @@ def desenhar_texto(texto, tamanho, cor, x, y):
 class Jogador(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        carro = "imagem jogo\Carro.png"
+        carro = "imagem jogo/ferrari.png"
         self.image = pygame.image.load(carro)
         self.image = pygame.transform.scale(self.image, (60, 100))
         self.rect = self.image.get_rect()
@@ -86,7 +86,7 @@ class Inimigo(pygame.sprite.Sprite):
         super().__init__()
         carro1 = 'imagem jogo\carroinimigo1.png'
         carro2 = 'imagem jogo\carroinimigo2.png'
-        carro3 ='imagem jogo\carroinimigo3.png'
+        carro3 = 'imagem jogo\carroinimigo3.png'
         lista_carros = [carro1, carro2, carro3]
         self.image = pygame.image.load(random.choice(lista_carros))
         self.image = pygame.transform.scale(self.image, (60, 100))
