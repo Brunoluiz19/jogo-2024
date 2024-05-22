@@ -120,7 +120,7 @@ def iniciar_jogo():
     distancia_percorrida = 0
     velocidade_jogo = 5
     fase_atual = 0  # Adicione esta linha
-    for _ in range(5):
+    for _ in range(5): 
         x = random.randrange(LIMITE_ESQUERDO, LIMITE_DIREITO - 50)
         inimigo = Inimigo()
         inimigo.rect.x = x
@@ -134,7 +134,7 @@ iniciar_jogo()
 NUM_FASES = 10
 fase_atual = 0
 metas_fases = [50, 100, 150, 200, 250, 500, 800, 1000, 1200, 1500]  # Distância necessária para cada fase
-taxas_aumento_fases = [1.5, 2, 2.5, 3.5, 5, 6, 7, 8, 9, 10]  # Taxa de aumento de velocidade para cada fase
+taxas_aumento_fases = [1.5, 2, 2.5, 3.5, 5, 6, 7, 8, 9, 10]  # Taxa de aumento de velocidade para cada fase  
 
 # Função para determinar a fase atual
 def determinar_fase(distancia_percorrida):
